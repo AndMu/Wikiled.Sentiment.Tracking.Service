@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Wikiled</Authors>
+    <Description>Wikiled.Sentiment.Tracking.Api</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <ProjectUrl>https://github.com/AndMu/Wikiled.Sentiment.Tracking.Service</ProjectUrl>    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Wikiled.Common.Net" Version="1.1.10" />
+    <PackageReference Include="Wikiled.Sentiment.Tracking" Version="1.0.7" />
+  </ItemGroup>
+
+</Project>

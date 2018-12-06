@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{447123EB-BA32-4ED7-867A-0A72133FEEFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wikiled.Sentiment.Tracking.Api", "Wikiled.Sentiment.Tracking.Api\Wikiled.Sentiment.Tracking.Api.csproj", "{F654A09E-541C-40E3-A6CE-BAE5B7B904FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wikiled.Sentiment.Tracking.Service", "Wikiled.Sentiment.Tracking.Service\Wikiled.Sentiment.Tracking.Service.csproj", "{7ED519C4-41C0-46CA-B568-FC7F0B54A681}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wikiled.Sentiment.Tracking.Service.Tests", "Wikiled.Sentiment.Tracking.Service.Tests\Wikiled.Sentiment.Tracking.Service.Tests.csproj", "{453A8A06-64EF-4BD0-B590-315C7A64583A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wikiled.Sentiment.Tracking.Service.Sample", "Wikiled.Sentiment.Tracking.Service.Sample\Wikiled.Sentiment.Tracking.Service.Sample.csproj", "{D6753F3C-21B6-4122-8CE9-175DED93F71E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F654A09E-541C-40E3-A6CE-BAE5B7B904FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F654A09E-541C-40E3-A6CE-BAE5B7B904FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F654A09E-541C-40E3-A6CE-BAE5B7B904FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F654A09E-541C-40E3-A6CE-BAE5B7B904FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7ED519C4-41C0-46CA-B568-FC7F0B54A681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ED519C4-41C0-46CA-B568-FC7F0B54A681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ED519C4-41C0-46CA-B568-FC7F0B54A681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ED519C4-41C0-46CA-B568-FC7F0B54A681}.Release|Any CPU.Build.0 = Release|Any CPU
+		{453A8A06-64EF-4BD0-B590-315C7A64583A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{453A8A06-64EF-4BD0-B590-315C7A64583A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{453A8A06-64EF-4BD0-B590-315C7A64583A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{453A8A06-64EF-4BD0-B590-315C7A64583A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6753F3C-21B6-4122-8CE9-175DED93F71E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6753F3C-21B6-4122-8CE9-175DED93F71E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6753F3C-21B6-4122-8CE9-175DED93F71E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6753F3C-21B6-4122-8CE9-175DED93F71E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{453A8A06-64EF-4BD0-B590-315C7A64583A} = {447123EB-BA32-4ED7-867A-0A72133FEEFB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {635F2295-F5D6-4362-8D98-D884522DFE57}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+EndGlobal
