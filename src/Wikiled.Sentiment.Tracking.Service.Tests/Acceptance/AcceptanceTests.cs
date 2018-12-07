@@ -44,8 +44,8 @@ namespace Wikiled.Sentiment.Tracking.Service.Tests.Acceptance
         {
             var result = await analysis.GetTrackingResults(new Api.Request.SentimentRequest("AMD"), CancellationToken.None).ConfigureAwait(false);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual("AMD", result["AMD"].Keyword);
-            Assert.AreEqual(0, result["AMD"].Total);
+            Assert.AreEqual(1, result["AMD"].Length);
+            Assert.AreEqual(24, result["AMD"][0].Hours);
         }
 
         [Test]

@@ -24,15 +24,9 @@ namespace Wikiled.Sentiment.Tracking.Service.Logic
             if (request.Hours == null)
             {
                 logger.LogDebug("Hours not specified, switching to default");
-                request.Hours = new[] {24, 12, 6, 1};
+                request.Hours = new[] {24};
             }
-
-            if (request.Hour == default)
-            {
-                logger.LogDebug("Hour not specified, switching to default - 24");
-                request.Hour = 24;
-            }
-
+            
             return request;
         }
     }

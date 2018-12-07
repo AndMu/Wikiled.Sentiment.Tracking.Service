@@ -15,7 +15,7 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="System.Reactive" Version="4.1.2" />
     <PackageReference Include="Wikiled.Sentiment.Api" Version="1.1.30" />
-    <PackageReference Include="Wikiled.Sentiment.Tracking" Version="1.0.7" />
+    <PackageReference Include="Wikiled.Sentiment.Tracking" Version="1.0.10" />
     <PackageReference Include="Wikiled.Server.Core" Version="1.2.14" />
   </ItemGroup>
 

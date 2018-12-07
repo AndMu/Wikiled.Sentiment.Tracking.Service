@@ -16,7 +16,5 @@ namespace Wikiled.Sentiment.Tracking.Api.Request
         public string[] Keywords { get; }
 
         public int[] Hours { get; set; }
-
-        public int Hour { get; set; }
     }
 }

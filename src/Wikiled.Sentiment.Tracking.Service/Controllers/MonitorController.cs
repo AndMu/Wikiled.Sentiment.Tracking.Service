@@ -28,7 +28,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Controllers
         [HttpPost]
         public IActionResult GetResult([FromBody] SentimentRequest request)
         {
-            Dictionary<string, TrackingResults> results = new Dictionary<string, TrackingResults>();
+            Dictionary<string, TrackingResult[]> results = new Dictionary<string, TrackingResult[]>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
                 results[request.Keywords[i]] = GetSingle(request.Keywords[0], request.Type, request.Hours);
@@ -41,17 +41,11 @@ namespace Wikiled.Sentiment.Tracking.Service.Controllers
         [HttpPost]
         public IActionResult GetResultHistory([FromBody] SentimentRequest request)
         {
-            var hours = request.Hours.FirstOrDefault();
-            if (hours == default)
-            {
-                Logger.LogInformation("Hours not specified, switching to default");
-                hours = 24;
-            }
-
+            var hours = request.Hours.Max();
             Dictionary<string, RatingRecord[]> results = new Dictionary<string, RatingRecord[]>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
-                results[request.Keywords[i]] = GetSingleHistory(request.Keywords[i], request.Type, request.Hour);
+                results[request.Keywords[i]] = GetSingleHistory(request.Keywords[i], request.Type, hours);
             }
 
             return Ok(results);
@@ -63,21 +57,24 @@ namespace Wikiled.Sentiment.Tracking.Service.Controllers
             return tracker.GetRatings(hours).OrderByDescending(item => item.Date).ToArray();
         }
 
-        private TrackingResults GetSingle(string keyword, string type, int[] selectedSteps)
+        private TrackingResult[] GetSingle(string keyword, string type, int[] selectedSteps)
         {
             var tracker = tracking.Resolve(keyword, type);
-            TrackingResults result = new TrackingResults { Keyword = tracker.Name, Type = tracker.Type };
-            foreach (int step in selectedSteps)
+            TrackingResult[] results = new TrackingResult[selectedSteps.Length];
+            for (int i = 0; i < selectedSteps.Length; i++)
             {
-                result.Sentiment[$"{step}H"] = new TrackingResult
+                var step = selectedSteps[i];
+                var result = new TrackingResult
                 {
                     Average = tracker.CalculateAverageRating(step),
-                    TotalMessages = tracker.Count(lastHours: step)
+                    TotalMessages = tracker.Count(lastHours: step),
+                    Hours = step
                 };
+
+                results[i] = result;
             }
 
-            result.Total = tracker.Count(false);
-            return result;
+            return results.ToArray();
         }
     }
 }

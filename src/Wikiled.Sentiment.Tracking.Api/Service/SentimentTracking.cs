@@ -19,14 +19,14 @@ namespace Wikiled.Sentiment.Tracking.Api.Service
             client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<IDictionary<string, TrackingResults>> GetTrackingResults(SentimentRequest request, CancellationToken token)
+        public async Task<IDictionary<string, TrackingResult[]>> GetTrackingResults(SentimentRequest request, CancellationToken token)
         {
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var result = await client.PostRequest<SentimentRequest, RawResponse<Dictionary<string, TrackingResults>>>("api/monitor/sentiment", request, token).ConfigureAwait(false);
+            var result = await client.PostRequest<SentimentRequest, RawResponse<Dictionary<string, TrackingResult[]>>>("api/monitor/sentiment", request, token).ConfigureAwait(false);
             if (!result.IsSuccess)
             {
                 throw new ApplicationException("Failed to retrieve:" + result.HttpResponseMessage);
