@@ -26,7 +26,7 @@ namespace Wikiled.Sentiment.Tracking.Api.Service
                 throw new ArgumentNullException(nameof(request));
             }
 
-            var result = await client.PostRequest<SentimentRequest, RawResponse<Dictionary<string, TrackingResults>>>("sentiment", request, token).ConfigureAwait(false);
+            var result = await client.PostRequest<SentimentRequest, RawResponse<Dictionary<string, TrackingResults>>>("api/monitor/sentiment", request, token).ConfigureAwait(false);
             if (!result.IsSuccess)
             {
                 throw new ApplicationException("Failed to retrieve:" + result.HttpResponseMessage);
@@ -43,7 +43,7 @@ namespace Wikiled.Sentiment.Tracking.Api.Service
             }
 
             var result = await client
-                .PostRequest<SentimentRequest, RawResponse<Dictionary<string, RatingRecord[]>>>("history", request, token)
+                .PostRequest<SentimentRequest, RawResponse<Dictionary<string, RatingRecord[]>>>("api/monitor/history", request, token)
                 .ConfigureAwait(false);
             if (!result.IsSuccess)
             {
