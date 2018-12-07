@@ -43,7 +43,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Tests.Acceptance
         public async Task GetTrackingResults()
         {
             var result = await analysis.GetTrackingResults(new Api.Request.SentimentRequest("AMD"), CancellationToken.None).ConfigureAwait(false);
-            Assert.AreEqual(1, result.Values);
+            Assert.AreEqual(1, result.Count);
             Assert.AreEqual("AMD", result["AMD"].Keyword);
             Assert.AreEqual(0, result["AMD"].Total);
         }
@@ -52,7 +52,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Tests.Acceptance
         public async Task GetTrackingHistory()
         {
             IDictionary<string, RatingRecord[]> result = await analysis.GetTrackingHistory(new Api.Request.SentimentRequest("AMD"), CancellationToken.None).ConfigureAwait(false);
-            Assert.AreEqual(1, result.Values);
+            Assert.AreEqual(1, result.Count);
             Assert.AreEqual(0, result["AMD"].Length);
         }
     }

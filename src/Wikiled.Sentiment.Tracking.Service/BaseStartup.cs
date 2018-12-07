@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Reactive.Disposables;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -17,6 +16,8 @@ using Wikiled.Sentiment.Api.Service;
 using Wikiled.Sentiment.Tracking.Logic;
 using Wikiled.Sentiment.Tracking.Modules;
 using Wikiled.Sentiment.Tracking.Service.Config;
+using Wikiled.Sentiment.Tracking.Service.Controllers;
+using Wikiled.Sentiment.Tracking.Service.Logic;
 using Wikiled.Server.Core.Errors;
 using Wikiled.Server.Core.Helpers;
 using Wikiled.Server.Core.Middleware;
@@ -76,7 +77,7 @@ namespace Wikiled.Sentiment.Tracking.Service
                 });
 
             // Add framework services.
-            services.AddMvc(options => { });
+            services.AddMvc(options => { }).AddApplicationPart(typeof(MonitorController).Assembly).AddControllersAsServices();
 
             // needed to load configuration from appsettings.json
             services.AddOptions();
@@ -87,6 +88,7 @@ namespace Wikiled.Sentiment.Tracking.Service
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterModule<CommonModule>();
             builder.RegisterType<SentimentAnalysis>().As<ISentimentAnalysis>();
+            builder.RegisterType<RequestEnrichment>().As<IRequestEnrichment>();
 
             builder.Populate(services);
             ConfigureSpecific(builder);

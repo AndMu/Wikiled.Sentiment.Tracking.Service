@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Wikiled.Sentiment.Tracking.Api.Request;
 using Wikiled.Sentiment.Tracking.Logic;
+using Wikiled.Sentiment.Tracking.Service.Logic;
 using Wikiled.Server.Core.ActionFilters;
 using Wikiled.Server.Core.Controllers;
 
-namespace Wikiled.Sentiment.Tracking.Service.Logic
+namespace Wikiled.Sentiment.Tracking.Service.Controllers
 {
     [TypeFilter(typeof(RequestValidationAttribute))]
-    public abstract class BaseMonitorController : BaseController
+    [TypeFilter(typeof(RequestEnrichmentAttribute))]
+    [Route("api/[controller]")]
+    public class MonitorController : BaseController
     {
         private readonly ITrackingManager tracking;
 
-        protected BaseMonitorController(ILoggerFactory loggerFactory, ITrackingManager tracking)
+        public MonitorController(ILoggerFactory loggerFactory, ITrackingManager tracking)
             : base(loggerFactory)
         {
             this.tracking = tracking ?? throw new ArgumentNullException(nameof(tracking));
@@ -24,7 +28,6 @@ namespace Wikiled.Sentiment.Tracking.Service.Logic
         [HttpPost]
         public IActionResult GetResult([FromBody] SentimentRequest request)
         {
-            Prepare(request);
             Dictionary<string, TrackingResults> results = new Dictionary<string, TrackingResults>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
@@ -38,7 +41,6 @@ namespace Wikiled.Sentiment.Tracking.Service.Logic
         [HttpPost]
         public IActionResult GetResultHistory([FromBody] SentimentRequest request)
         {
-            Prepare(request);
             var hours = request.Hours.FirstOrDefault();
             if (hours == default)
             {
@@ -49,13 +51,11 @@ namespace Wikiled.Sentiment.Tracking.Service.Logic
             Dictionary<string, RatingRecord[]> results = new Dictionary<string, RatingRecord[]>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
-                results[request.Keywords[i]] = GetSingleHistory(request.Keywords[i], request.Type, hours);
+                results[request.Keywords[i]] = GetSingleHistory(request.Keywords[i], request.Type, request.Hour);
             }
 
             return Ok(results);
         }
-
-        protected abstract void Prepare(SentimentRequest request);
 
         private RatingRecord[] GetSingleHistory(string keyword, string type, int hours)
         {
@@ -67,14 +67,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Logic
         {
             var tracker = tracking.Resolve(keyword, type);
             TrackingResults result = new TrackingResults { Keyword = tracker.Name, Type = tracker.Type };
-
-            int[] steps = { 24, 12, 6, 1 };
-            if (selectedSteps != null)
-            {
-                steps = selectedSteps;
-            }
-
-            foreach (int step in steps)
+            foreach (int step in selectedSteps)
             {
                 result.Sentiment[$"{step}H"] = new TrackingResult
                 {

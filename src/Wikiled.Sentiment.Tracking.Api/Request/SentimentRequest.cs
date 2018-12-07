@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wikiled.Sentiment.Tracking.Api.Request
 {
@@ -11,8 +12,11 @@ namespace Wikiled.Sentiment.Tracking.Api.Request
 
         public string Type { get; set; }
 
+        [Required]
         public string[] Keywords { get; }
 
         public int[] Hours { get; set; }
+
+        public int Hour { get; set; }
     }
 }

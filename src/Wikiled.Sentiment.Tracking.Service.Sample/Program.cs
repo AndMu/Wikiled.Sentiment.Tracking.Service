@@ -14,7 +14,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Sample
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                BuildWebHost(args).Run();
+                BuildWebHost(args).Start();
             }
             catch (Exception ex)
             {
@@ -28,6 +28,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Sample
                 NLog.LogManager.Shutdown();
             }
         }
+        
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
