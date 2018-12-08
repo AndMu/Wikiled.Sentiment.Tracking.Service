@@ -57,7 +57,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Tests.Acceptance
         {
             IDictionary<string, RatingRecord[]> result = await analysis.GetTrackingHistory(new Api.Request.SentimentRequest("AMD"), CancellationToken.None).ConfigureAwait(false);
             Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(0, result["AMD"].Length);
+            Assert.AreEqual(1, result["AMD"].Length);
         }
     }
 }
