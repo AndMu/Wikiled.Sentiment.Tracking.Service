@@ -42,10 +42,14 @@ namespace Wikiled.Sentiment.Tracking.Service.Tests.Acceptance
         [Test]
         public async Task GetTrackingResults()
         {
-            var result = await analysis.GetTrackingResults(new Api.Request.SentimentRequest("AMD"), CancellationToken.None).ConfigureAwait(false);
-            Assert.AreEqual(1, result.Count);
+            var result = await analysis.GetTrackingResults(new Api.Request.SentimentRequest("AMD", "TSLA"), CancellationToken.None).ConfigureAwait(false);
+            Assert.AreEqual(2, result.Count);
             Assert.AreEqual(1, result["AMD"].Length);
             Assert.AreEqual(24, result["AMD"][0].Hours);
+            Assert.AreEqual(1, result["AMD"][0].TotalMessages);
+            Assert.AreEqual(1, result["AMD"][0].Average);
+            Assert.AreEqual(0, result["TSLA"][0].TotalMessages);
+            Assert.IsNull(result["TSLA"][0].Average);
         }
 
         [Test]

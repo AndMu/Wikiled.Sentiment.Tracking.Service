@@ -31,7 +31,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Controllers
             Dictionary<string, TrackingResult[]> results = new Dictionary<string, TrackingResult[]>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
-                results[request.Keywords[i]] = GetSingle(request.Keywords[0], request.Type, request.Hours);
+                results[request.Keywords[i]] = GetSingle(request.Keywords[i], request.Type, request.Hours);
             }
 
             return Ok(results);

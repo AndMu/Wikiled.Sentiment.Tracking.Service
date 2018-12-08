@@ -11,9 +11,9 @@ namespace Wikiled.Sentiment.Tracking.Service.Sample
         {
         }
 
-
         protected override void ConfigureSpecific(ContainerBuilder builder)
         {
+            builder.RegisterType<TestExpectation>().AsSelf().AutoActivate();
         }
 
         protected override string GetPersistencyLocation()
