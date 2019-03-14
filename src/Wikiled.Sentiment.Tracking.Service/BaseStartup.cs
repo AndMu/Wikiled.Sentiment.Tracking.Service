@@ -59,6 +59,7 @@ namespace Wikiled.Sentiment.Tracking.Service
             app.UseHttpStatusCodeExceptionMiddleware();
             app.UseRequestLogging();
             app.UseMvc();
+            applicationLifetime.ApplicationStopping.Register(OnShutdown);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -85,7 +86,7 @@ namespace Wikiled.Sentiment.Tracking.Service
             SentimentConfig sentimentConfig = services.RegisterConfiguration<SentimentConfig>(Configuration.GetSection("sentiment"));
 
             // Create the container builder.
-            ContainerBuilder builder = new ContainerBuilder();
+            var builder = new ContainerBuilder();
             builder.RegisterModule<CommonModule>();
             builder.RegisterType<SentimentAnalysis>().As<ISentimentAnalysis>();
             builder.RegisterType<RequestEnrichment>().As<IRequestEnrichment>();
@@ -102,6 +103,11 @@ namespace Wikiled.Sentiment.Tracking.Service
             return new AutofacServiceProvider(appContainer);
         }
 
+        protected virtual void OnShutdown()
+        {
+            logger.LogInformation("OnShutdown");
+        }
+
         protected abstract void ConfigureSpecific(ContainerBuilder builder);
 
         protected abstract string GetPersistencyLocation();
@@ -115,7 +121,13 @@ namespace Wikiled.Sentiment.Tracking.Service
 
         private void SetupSentimentServices(ContainerBuilder builder, SentimentConfig sentiment)
         {
-            logger.LogInformation("Setting up services...");
+            if (string.IsNullOrEmpty(sentiment.Url))
+            {
+                logger.LogInformation("Sentiment service is not configured.");
+                return;
+            }
+
+            logger.LogInformation("Setting up sentiment services...");
             builder.Register(context => new StreamApiClientFactory(context.Resolve<ILoggerFactory>(),
                                                                    new HttpClient
                                                                    {
@@ -123,11 +135,12 @@ namespace Wikiled.Sentiment.Tracking.Service
                                                                    },
                                                                    new Uri(sentiment.Url)))
                 .As<IStreamApiClientFactory>();
-            WorkRequest request = new WorkRequest
+            var request = new WorkRequest
             {
                 CleanText = true,
                 Domain = sentiment.Domain
             };
+
             builder.RegisterInstance(request);
             builder.RegisterType<SentimentAnalysis>().As<ISentimentAnalysis>();
             logger.LogInformation("Register sentiment: {0} {1}", sentiment.Url, sentiment.Domain);
