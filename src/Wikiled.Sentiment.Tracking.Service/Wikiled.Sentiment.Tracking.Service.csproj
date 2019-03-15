@@ -7,6 +7,7 @@
     <Description>Wikiled.Sentiment.Tracking.Service</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <ProjectUrl>https://github.com/AndMu/Wikiled.Sentiment.Tracking.Service</ProjectUrl>
+	<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeP2PAssets</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wikiled.Sentiment.Tracking.Api\Wikiled.Sentiment.Tracking.Api.csproj" />
+    <ProjectReference Include="..\Wikiled.Sentiment.Tracking.Api\Wikiled.Sentiment.Tracking.Api.csproj" PrivateAssets="All"/>
   </ItemGroup>
+  
+   <Target Name="IncludeP2PAssets">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(OutputPath)\Wikiled.Sentiment.Tracking.Api.dll" />
+    </ItemGroup>
+  </Target>
 
 </Project>
