@@ -22,8 +22,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Tests.Acceptance
         public void SetUp()
         {
             wrapper = ServerWrapper.Create<Startup>(TestContext.CurrentContext.TestDirectory, services => { });
-            analysis = new SentimentTracking(
-                new ApiClientFactory(wrapper.Client, wrapper.Client.BaseAddress));
+            analysis = new SentimentTracking(new ApiClientFactory(wrapper.Client, wrapper.Client.BaseAddress));
         }
 
         [OneTimeTearDown]

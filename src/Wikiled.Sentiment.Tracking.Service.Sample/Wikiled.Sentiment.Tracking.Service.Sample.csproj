@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Wikiled.Sentiment.Tracking.Api\Wikiled.Sentiment.Tracking.Api.csproj" />
     <ProjectReference Include="..\Wikiled.Sentiment.Tracking.Service\Wikiled.Sentiment.Tracking.Service.csproj" />
   </ItemGroup>
 
