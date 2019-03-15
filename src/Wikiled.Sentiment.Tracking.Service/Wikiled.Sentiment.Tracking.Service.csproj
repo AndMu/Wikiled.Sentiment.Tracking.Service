@@ -23,12 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Wikiled.Sentiment.Tracking.Api\Wikiled.Sentiment.Tracking.Api.csproj" PrivateAssets="All"/>
+    <ProjectReference Include="..\Wikiled.Sentiment.Tracking.Api\Wikiled.Sentiment.Tracking.Api.csproj" PrivateAssets="All" />
   </ItemGroup>
   
    <Target Name="IncludeP2PAssets">
     <ItemGroup>
-      <BuildOutputInPackage Include="$(OutputPath)\Wikiled.Sentiment.Tracking.Api.dll" />
+      <BuildOutputInPackage Include="$(OutputPath)Wikiled.Sentiment.Tracking.Api.dll" />	  
     </ItemGroup>
   </Target>
 
