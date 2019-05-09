@@ -28,7 +28,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Controllers
         [HttpPost]
         public IActionResult GetResult([FromBody] SentimentRequest request)
         {
-            Dictionary<string, TrackingResult[]> results = new Dictionary<string, TrackingResult[]>();
+            var results = new Dictionary<string, TrackingResult[]>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
                 results[request.Keywords[i]] = GetSingle(request.Keywords[i], request.Type, request.Hours);
@@ -42,7 +42,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Controllers
         public IActionResult GetResultHistory([FromBody] SentimentRequest request)
         {
             var hours = request.Hours.Max();
-            Dictionary<string, RatingRecord[]> results = new Dictionary<string, RatingRecord[]>();
+            var results = new Dictionary<string, RatingRecord[]>();
             for (int i = 0; i < request.Keywords.Length; i++)
             {
                 results[request.Keywords[i]] = GetSingleHistory(request.Keywords[i], request.Type, hours);

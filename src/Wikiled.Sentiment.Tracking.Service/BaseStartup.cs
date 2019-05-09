@@ -115,6 +115,7 @@ namespace Wikiled.Sentiment.Tracking.Service
         private void SetupTracking(ContainerBuilder builder)
         {
             var config = new TrackingConfiguration(TimeSpan.FromHours(1), TimeSpan.FromDays(10), Path.Combine(GetPersistencyLocation(), "ratings.csv"));
+            logger.LogInformation("Setup tracking: {0}", config.Persistency);
             config.Restore = true;
             builder.RegisterModule(new TrackingModule(config));
         }

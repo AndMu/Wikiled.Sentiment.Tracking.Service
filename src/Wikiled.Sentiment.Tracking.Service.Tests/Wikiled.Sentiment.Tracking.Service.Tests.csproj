@@ -10,9 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
     <PackageReference Include="NUnit" Version="3.11.0" />
-    <packagereference Include="Microsoft.NET.Test.Sdk" Version="16.0.1"></packagereference>
+    <packagereference Include="Microsoft.NET.Test.Sdk" Version="16.1.0"></packagereference>
     <packagereference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="Wikiled.Server.Core.Testing" Version="1.2.14" />
+    <PackageReference Include="Wikiled.Server.Core.Testing" Version="1.2.17" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
   </ItemGroup>
 
