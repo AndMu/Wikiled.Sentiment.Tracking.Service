@@ -1,19 +1,19 @@
-﻿using Autofac;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Wikiled.Sentiment.Tracking.Service.Sample
 {
     public class Startup : BaseStartup
     {
-        public Startup(ILoggerFactory loggerFactory, IHostingEnvironment env)
+        public Startup(ILoggerFactory loggerFactory, IWebHostEnvironment env)
             : base(loggerFactory, env)
         {
         }
 
-        protected override void ConfigureSpecific(ContainerBuilder builder)
+        protected override void ConfigureSpecific(IServiceCollection builder)
         {
-            builder.RegisterType<TestExpectation>().AsSelf().AutoActivate();
+            builder.AddHostedService<TestExpectation>();
         }
 
         protected override string GetPersistencyLocation()

@@ -12,6 +12,7 @@ namespace Wikiled.Sentiment.Tracking.Service.Sample
         {
             // NLog: setup the logger first to catch all errors
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+
             try
             {
                 BuildWebHost(args).Start();

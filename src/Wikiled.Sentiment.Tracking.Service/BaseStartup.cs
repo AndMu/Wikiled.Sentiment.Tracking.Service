@@ -2,12 +2,11 @@
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Wikiled.Common.Net.Client;
 using Wikiled.Common.Utilities.Modules;
@@ -28,7 +27,7 @@ namespace Wikiled.Sentiment.Tracking.Service
     {
         private readonly ILogger<BaseStartup> logger;
 
-        protected BaseStartup(ILoggerFactory loggerFactory, IHostingEnvironment env)
+        protected BaseStartup(ILoggerFactory loggerFactory, IWebHostEnvironment env)
         {
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -44,10 +43,10 @@ namespace Wikiled.Sentiment.Tracking.Service
 
         public IConfigurationRoot Configuration { get; }
 
-        public IHostingEnvironment Env { get; }
+        public IWebHostEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applicationLifetime)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -55,15 +54,20 @@ namespace Wikiled.Sentiment.Tracking.Service
             }
 
             app.UseCors("CorsPolicy");
+            app.UseRouting();
             app.UseExceptionHandlingMiddleware();
             app.UseHttpStatusCodeExceptionMiddleware();
             app.UseRequestLogging();
-            app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
+
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             // Needed to add this section, and....
             services.AddCors(
@@ -71,36 +75,24 @@ namespace Wikiled.Sentiment.Tracking.Service
                 {
                     options.AddPolicy(
                         "CorsPolicy",
-                        itemBuider => itemBuider.AllowAnyOrigin()
-                                                .AllowAnyMethod()
-                                                .AllowAnyHeader()
-                                                .AllowCredentials());
+                        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 });
 
-            // Add framework services.
-            services.AddMvc(options => { }).AddApplicationPart(typeof(MonitorController).Assembly).AddControllersAsServices();
-
-            // needed to load configuration from appsettings.json
+            services.AddControllers();
             services.AddOptions();
 
             SentimentConfig sentimentConfig = services.RegisterConfiguration<SentimentConfig>(Configuration.GetSection("sentiment"));
 
             // Create the container builder.
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<CommonModule>();
-            builder.RegisterType<SentimentAnalysis>().As<ISentimentAnalysis>();
-            builder.RegisterType<RequestEnrichment>().As<IRequestEnrichment>();
+            services.RegisterModule<CommonModule>();
+            services.AddTransient<ISentimentAnalysis, SentimentAnalysis>();
+            services.AddTransient<IRequestEnrichment, RequestEnrichment>();
 
-            builder.Populate(services);
-            ConfigureSpecific(builder);
-            SetupSentimentServices(builder, sentimentConfig);
-            SetupTracking(builder);
-
-            IContainer appContainer = builder.Build();
+            ConfigureSpecific(services);
+            SetupSentimentServices(services, sentimentConfig);
+            SetupTracking(services);
 
             logger.LogInformation("Ready!");
-            // Create the IServiceProvider based on the container.
-            return new AutofacServiceProvider(appContainer);
         }
 
         protected virtual void OnShutdown()
@@ -108,11 +100,11 @@ namespace Wikiled.Sentiment.Tracking.Service
             logger.LogInformation("OnShutdown");
         }
 
-        protected abstract void ConfigureSpecific(ContainerBuilder builder);
+        protected abstract void ConfigureSpecific(IServiceCollection builder);
 
         protected abstract string GetPersistencyLocation();
 
-        private void SetupTracking(ContainerBuilder builder)
+        private void SetupTracking(IServiceCollection builder)
         {
             var config = new TrackingConfiguration(TimeSpan.FromHours(1), TimeSpan.FromDays(10), Path.Combine(GetPersistencyLocation(), "ratings.csv"));
             logger.LogInformation("Setup tracking: {0}", config.Persistency);
@@ -120,7 +112,7 @@ namespace Wikiled.Sentiment.Tracking.Service
             builder.RegisterModule(new TrackingModule(config));
         }
 
-        private void SetupSentimentServices(ContainerBuilder builder, SentimentConfig sentiment)
+        private void SetupSentimentServices(IServiceCollection builder, SentimentConfig sentiment)
         {
             if (string.IsNullOrEmpty(sentiment.Url))
             {
@@ -129,21 +121,20 @@ namespace Wikiled.Sentiment.Tracking.Service
             }
 
             logger.LogInformation("Setting up sentiment services...");
-            builder.Register(context => new StreamApiClientFactory(context.Resolve<ILoggerFactory>(),
+            builder.AddSingleton< IStreamApiClientFactory>(context => new StreamApiClientFactory(context.GetRequiredService<ILoggerFactory>(),
                                                                    new HttpClient
                                                                    {
                                                                        Timeout = TimeSpan.FromMinutes(10)
                                                                    },
-                                                                   new Uri(sentiment.Url)))
-                .As<IStreamApiClientFactory>();
+                                                                   new Uri(sentiment.Url)));
             var request = new WorkRequest
             {
                 CleanText = true,
                 Domain = sentiment.Domain
             };
 
-            builder.RegisterInstance(request);
-            builder.RegisterType<SentimentAnalysis>().As<ISentimentAnalysis>();
+            builder.AddSingleton(request);
+            builder.AddTransient<ISentimentAnalysis, SentimentAnalysis>();
             logger.LogInformation("Register sentiment: {0} {1}", sentiment.Url, sentiment.Domain);
         }
     }
